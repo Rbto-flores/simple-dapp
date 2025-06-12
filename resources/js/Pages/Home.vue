@@ -1,5 +1,10 @@
+<script setup>
+
+</script>
+
 <template>
+    <Head :title="` | ${$page.component}`" />
     <div>
-        <h1>Home</h1>
+            <h1>Home Page</h1>
     </div>
 </template>
