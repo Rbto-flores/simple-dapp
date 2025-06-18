@@ -17,12 +17,14 @@ WORKDIR /app
 COPY composer.json composer.lock ./
 COPY package.json package-lock.json ./
 
+# Copiar todo el código fuente
+COPY . .
+
+
 # Instalar dependencias PHP y Node
 RUN composer install --no-dev --optimize-autoloader
 RUN npm install
 
-# Copiar todo el código fuente
-COPY . .
 
 # Construir assets front-end (ej: Laravel Mix, Vite)
 RUN npm run prod
