@@ -1,0 +1,38 @@
+name: Laravel Docker VPS Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clone
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # 2. Copy to VPS
+      - name: Copy files to VPS
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.VPS_SERVER_IP }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "."
+          target: "/home/${{ secrets.VPS_USERNAME }}/laravel-app"
+
+      # 3. Exec docker-compose
+      - name: SSH & Deploy
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.VPS_SERVER_IP }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/${{ secrets.VPS_USERNAME }}/laravel-app
+            docker-compose down --remove-orphans
+            docker-compose -f docker-compose-prod.yml build
+            docker-compose -f docker-compose.prod.yml up -d
