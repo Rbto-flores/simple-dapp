@@ -5,13 +5,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: laravel_app
-    volumes:
-      - .:/var/www
-    working_dir: /var/www
+    container_name: simple-dapp
+    working_dir: /var/www/html
     depends_on:
       - db
-
+    volumes:
+      - appdata:/var/www/html
   db:
     image: mysql:8.0
     container_name: laravel_db
@@ -30,8 +29,8 @@ services:
     depends_on:
       - app
     volumes:
-      - ./docker/production/nginx/nginx.conf.conf:/etc/nginx/conf.d/default.conf
-      - ./public:/var/www/html
+      - appdata:/var/www/html
+      - ./docker/production/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       - ./docker/production/certbot/www:/var/www/certbot
       - ./docker/production/certbot/conf:/etc/letsencrypt
     ports:
@@ -48,3 +47,5 @@ services:
 
 volumes:
   dbdata:
+  appdata:
+

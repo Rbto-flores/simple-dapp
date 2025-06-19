@@ -11,7 +11,7 @@ RUN docker-php-ext-install pdo_mysql pdo_pgsql zip gd
 # Instalar Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-WORKDIR /app
+WORKDIR /var/www/html
 
 # Copiar archivos composer.json y package.json para aprovechar cache
 COPY composer.json composer.lock ./
@@ -27,7 +27,7 @@ RUN npm install
 
 
 # Construir assets front-end (ej: Laravel Mix, Vite)
-RUN npm run prod
+RUN npm run build
 
 # Limpiar dependencias de build para bajar tamaño
 RUN apk del .build-deps
@@ -46,9 +46,9 @@ COPY --from=build /usr/local/lib/php/extensions /usr/local/lib/php/extensions
 COPY --from=build /usr/local/etc/php/conf.d /usr/local/etc/php/conf.d
 
 # Copiar código y assets ya compilados
-COPY --from=build /app /app
+COPY --from=build /var/www/html /var/www/html
 
-WORKDIR /app
+WORKDIR /var/www/html
 
 # Crear directorios para cache y storage y dar permisos
 RUN mkdir -p storage bootstrap/cache \
@@ -56,6 +56,9 @@ RUN mkdir -p storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
 # Copiar entrypoint para tareas runtime
+RUN wget -qO /usr/local/bin/wait-for https://raw.githubusercontent.com/eficode/wait-for/v2.2.3/wait-for && \
+    chmod +x /usr/local/bin/wait-for
+
 COPY docker/production/php/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 

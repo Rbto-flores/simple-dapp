@@ -19,6 +19,8 @@
 /storage/*.key
 /storage/pail
 /vendor
+/docker/production/certbot/conf
+/docker/production/certbot/www
 Homestead.json
 Homestead.yaml
 Thumbs.db
