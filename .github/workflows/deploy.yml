@@ -18,7 +18,7 @@ jobs:
       - name: Copy files to VPS
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: ${{ secrets.VPS_SERVER_IP }}
+          host: ${{ secrets.VPS_SERVER_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "."
@@ -28,11 +28,11 @@ jobs:
       - name: SSH & Deploy
         uses: appleboy/ssh-action@v0.1.4
         with:
-          host: ${{ secrets.VPS_SERVER_IP }}
+          host: ${{ secrets.VPS_SERVER_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/${{ secrets.VPS_USERNAME }}/laravel-app
+            cd /home/${{ secrets.VPS_USERNAME }}/simple-dapp
             docker-compose down --remove-orphans
             docker-compose -f docker-compose-prod.yml build
-            docker-compose -f docker-compose.prod.yml up -d
+            docker-compose -f docker-compose-prod.yml up -d
