@@ -24,7 +24,7 @@ class AuthTest extends TestCase
 
         $response = $this->post(route('register'), $userData);
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('dashboard'));
         $this->assertDatabaseHas('users', [
             'name' => $userData['name'],
             'email' => $userData['email'],
@@ -149,7 +149,7 @@ class AuthTest extends TestCase
 
         $response = $this->actingAs($user)->get(route('login'));
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('dashboard'));
     }
 
     /** @test */
@@ -159,6 +159,6 @@ class AuthTest extends TestCase
 
         $response = $this->actingAs($user)->get(route('register'));
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('dashboard'));
     }
 }

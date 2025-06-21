@@ -32,7 +32,7 @@ class UserModelTest extends TestCase
     public function user_model_has_correct_fillable_fields()
     {
         $user = new User();
-        $expected = ['name', 'email', 'password'];
+        $expected = ['avatar','name', 'email', 'password'];
 
         $this->assertEquals($expected, $user->getFillable());
     }
