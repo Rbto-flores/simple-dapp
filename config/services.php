@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'fireblocks' => [
+        'api_key' => env('FIREBLOCKS_API_KEY'),
+        'base_url' => env('FIREBLOCKS_BASE_URL'),
+    ],
+
+
 ];
