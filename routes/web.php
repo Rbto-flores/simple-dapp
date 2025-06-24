@@ -1,22 +1,25 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+//use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth','2fa')->group(function () {
     Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
-
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+Route::middleware(['auth', 'redirect.2fa.confirmed'])->group(function () {
+    Route::inertia('/two-factor-setup', 'Auth/TwoFactorAuthenticationSetup')->name('two-factor.setup');
+});
+
 
 Route::middleware('guest')->group(function () {
     Route::inertia('/register', 'Auth/Register')->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
-
     Route::inertia('/login', 'Auth/Login')->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
 });
+
+Route::get('/two-factor-challenge', fn () => inertia('Auth/TwoFactorAuthenticationChallenge'))
+    ->name('two-factor.login');
