@@ -20,7 +20,7 @@ jobs:
         with:
           host: ${{ secrets.VPS_SERVER_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          password: ${{ secrets.VPS_PASSWORD }}
           source: "."
           target: "/home/${{ secrets.VPS_USERNAME }}/laravel-app"
 
