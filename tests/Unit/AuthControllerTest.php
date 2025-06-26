@@ -23,6 +23,7 @@ class AuthControllerTest extends TestCase
         $this->controller = new AuthController();
     }
 
+    
     /** @test */
     public function register_validates_required_fields()
     {

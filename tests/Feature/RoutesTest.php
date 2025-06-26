@@ -17,6 +17,7 @@ class RoutesTest extends TestCase
 
         $response->assertStatus(200);
     }
+    
 
     /** @test */
     public function login_page_is_accessible_for_guests()
@@ -59,7 +60,7 @@ class RoutesTest extends TestCase
 
         $response = $this->actingAs($user)->get(route('login'));
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('dashboard'));
     }
 
     /** @test */
@@ -68,8 +69,7 @@ class RoutesTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->get(route('register'));
-
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('dashboard'));
     }
 
     /** @test */

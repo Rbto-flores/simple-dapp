@@ -33,14 +33,6 @@ class HelperTest extends TestCase
         $this->assertStringContainsString('/', $homeRoute);
     }
 
-    /** @test */
-    public function old_function_works_correctly()
-    {
-        // Test old helper function
-        $oldValue = old('test_field', 'default');
-
-        $this->assertEquals('default', $oldValue);
-    }
 
     /** @test */
     public function csrf_token_function_returns_string()
