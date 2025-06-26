@@ -20,6 +20,3 @@ Route::middleware('guest')->group(function () {
     Route::inertia('/register', 'Auth/Register')->name('register');
     Route::inertia('/login', 'Auth/Login')->name('login');
 });
-
-Route::get('/two-factor-challenge', fn () => inertia('Auth/TwoFactorAuthenticationChallenge'))
-    ->name('two-factor.login');

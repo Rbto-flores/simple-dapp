@@ -1,11 +1,14 @@
 <script setup>
 import axios from 'axios'
 import { ref } from 'vue'
-import TwoFactorAuthCodeConfirmation from '../Components/TwoFactorAuthCodeConfirmation.vue'
+import { router } from '@inertiajs/vue3'
+import TwoFactorAuthenticationCodeInput from '../Components/TwoFactorAuthenticationCodeInput.vue'
+
 const step = ref(1)
 const qrCode = ref(null)
 const recoveryCodes = ref([])
 const error = ref('')
+const otp = ref('')
 
 async function goToStep2() {
   error.value = ''
@@ -21,6 +24,20 @@ async function goToStep2() {
   }
 }
 
+async function verifyCode() {
+  console.log(otp.value)
+  error.value = ''
+  try {
+    await axios.post('/user/confirmed-two-factor-authentication', { code: otp.value })
+    // Success! You can redirect or show a success message
+    error.value = ''
+    alert('Codigo confirmado correctamente')
+    router.visit('/dashboard')
+  } catch (err) {
+    console.log(err)
+    error.value = 'Código incorrecto. Intenta de nuevo.'
+  }
+}
 
 </script>
 
@@ -36,16 +53,16 @@ async function goToStep2() {
         Descárgala en tu teléfono antes de continuar.
       </p>
       <button @click="goToStep2" class="btn-primary">Proceder</button>
-      
+
     </div>
-  
+
     <!-- Step 2: Show QR and Recovery Codes -->
     <div v-else-if="step === 2" class="w-full flex flex-col items-center">
       <div v-if="qrCode" class="my-4 flex justify-center w-full">
         <div v-html="qrCode" />
       </div>
       <h2 class="text-center text-gray-500 w-1/2">
-        Anotas los siguiente Códigos de recuperación para poder acceder a tu cuenta en caso de pierdas el acceso a tu
+        Anotas los siguiente Códigos de recuperación para poder acceder a tu cuenta si pierdas el acceso a tu
         dispositivo:
       </h2>
       <ul class="list-disc list-inside mt-5">
@@ -56,7 +73,10 @@ async function goToStep2() {
 
     <!-- Step 3: Confirm Authenticator Code -->
     <div v-else-if="step === 3">
-      <TwoFactorAuthCodeConfirmation />
+      <div class="flex gap-2 mb-4">
+        <TwoFactorAuthenticationCodeInput v-model="otp" :message="error" />
+      </div>
+      <button @click="verifyCode" class="btn-primary">Verificar</button>
     </div>
   </div>
 </template>
